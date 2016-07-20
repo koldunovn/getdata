@@ -15,7 +15,7 @@ custom = ['sellevel,1']
 
 opath = '/mnt/lustre01/work/ch0636/u241057/INDIA'
 
-def make_path(path, exp, model):
+def make_ipath(path, exp, model):
     '''
     make path where to search for the input variables
     '''
@@ -26,7 +26,7 @@ def make_path(path, exp, model):
 
     return os.path.join(path, exp, modelfolder)
 
-def make_names(path, variab):
+def make_inames(path, variab):
     '''
     collect names of input variables
     '''
@@ -43,7 +43,7 @@ def convert_function(custom=None, ymonmean = None, selyear=None, selmon=None):
     basic = ['-f', 'nc4', '-r']
     if not custom:
         custom = []
-
+    print(custom)
     #if we forget to add dash for the first operator in custom line
     if len(custom)>=1:
         if not custom[0].startswith('-'):
@@ -66,21 +66,36 @@ def convert_function(custom=None, ymonmean = None, selyear=None, selmon=None):
     return final_function
 
 
-def custom_finction(model):
-    if model == 'remo':
+def custom_finction(model, custom = None):
+    '''
+    Add predefined custom function for the model and
+    combine it with user provided custom function.
+    '''
+    if not custom:
         custom = []
+
+    if model == 'remo':
+        pass
     elif model =='mpiom':
-        custom = ['-setpartab,/work/ch0636/m222054/ds/mpiom.partab.nash',\
-                  '-setgrid,/work/ch0636/m222054/ds/grids/AE06/AE06s.nc',\
-                  '-selindexbox,2,723,1,424',\
-                  '-setgrid,r724x424']
+        custom.append('-setpartab,/work/ch0636/m222054/ds/mpiom.partab.nash')
+        custom.append('-setgrid,/work/ch0636/m222054/ds/grids/AE06/AE06s.nc')
+        custom.append('-selindexbox,2,723,1,424')
+        custom.append('-setgrid,r724x424')
     else:
         custom = []
     return custom
 
+def 
 
 def cdo_command(model, custom=None, ymonmean = None, selyear = None, selmon=None):
-    custom = cu11
+    custom = custom_finction(model)
+    final_function = convert_function(custom, ymonmean, selyear, selmon)
+    return final_function
+
+def cdo_exe(final_function):
+    pass
+
+
     
 
 
