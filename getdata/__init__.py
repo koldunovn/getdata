@@ -34,7 +34,7 @@ def make_names(path, variab):
     ll.sort()
     return ll
 
-def convert_function(model, custom=None, ymonmean = None, selyear=None, selmon=None):
+def convert_function(custom=None, ymonmean = None, selyear=None, selmon=None):
     
     '''
     create convert line for cdo. 
@@ -59,13 +59,10 @@ def convert_function(model, custom=None, ymonmean = None, selyear=None, selmon=N
         custom.append('-copy')
 
     final_function = basic
-    order = 0
+
     for operator in custom:
-        if order == 0:
-            final_function.append(operator[1:])
-        else:
             final_function.append(operator)
-        order += 1
+    
     return final_function
 
 
@@ -77,10 +74,13 @@ def custom_finction(model):
                   '-setgrid,/work/ch0636/m222054/ds/grids/AE06/AE06s.nc',\
                   '-selindexbox,2,723,1,424',\
                   '-setgrid,r724x424']
+    else:
+        custom = []
     return custom
 
 
-
+def cdo_command(model, custom=None, ymonmean = None, selyear = None, selmon=None):
+    custom = cu11
     
 
 
