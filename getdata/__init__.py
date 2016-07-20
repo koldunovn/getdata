@@ -114,6 +114,7 @@ def custom_finction(model, custom = None):
 
 def cdo_commands(model, inames, onames, custom=None, ymonmean = None, selyear = None, selmon=None):
     custom = custom_finction(model, custom)
+    print custom
     final_function = convert_function(custom, ymonmean, selyear, selmon)
     commands  = []
     for iname, oname in zip(inames, onames):
@@ -123,9 +124,10 @@ def cdo_commands(model, inames, onames, custom=None, ymonmean = None, selyear = 
         commands.append(command)
     return commands
 
-#def cdo_exe(inames, onames, final_function):
-#    for iname, oname zip(inames, onames):
-#        print("cdo {} {} {}".format(final_function, iname, oname))
+def cdo_exe(commands):
+    for command in commands:
+        print(command)
+        cdo(command)
 
 
     
