@@ -8,7 +8,7 @@ cdo = sh.cdo
 path = '/mnt/lustre01/work/ch0636/a270067/rom/ae06_ind'
 exp = '419'
 model = 'remo'
-variabs = ['qdboxs', 'qdboxu']
+wildcards = ['qdboxs', 'qdboxu']
 selmon = '6,7,8,9'
 selyear = '1999/2001'
 custom = ['sellevel,1']
@@ -26,13 +26,22 @@ def make_ipath(path, exp, model):
 
     return os.path.join(path, exp, modelfolder)
 
-def make_inames(path, variab):
+def make_inames(path, wildcards):
     '''
-    collect names of input variables
+    collect names of files with input variables
     '''
-    ll = glob.glob('{}/*{}*'.format(path, variab))
-    ll.sort()
-    return ll
+    inames = []
+    for wildcard in wildcards:
+        ifiles = glob.glob('{}/*{}*'.format(path, wildcard))
+        for ffile in ifiles:
+            inames.append(ffile)
+    inames.sort()
+
+    return inames
+
+def make_onames(opath, inames):
+    pass
+
 
 def convert_function(custom=None, ymonmean = None, selyear=None, selmon=None):
     
@@ -85,7 +94,6 @@ def custom_finction(model, custom = None):
         custom = []
     return custom
 
-def 
 
 def cdo_command(model, custom=None, ymonmean = None, selyear = None, selmon=None):
     custom = custom_finction(model)
