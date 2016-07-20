@@ -2,6 +2,7 @@ import glob
 import numpy as np
 import os
 import sh
+import copy
 
 cdo = sh.cdo
 
@@ -12,6 +13,7 @@ wildcards = ['qdboxs', 'qdboxu']
 selmon = '6,7,8,9'
 selyear = '1999/2001'
 custom = ['sellevel,1']
+extraname = '_ymm' #extra part added to the end of processed file's name
 
 opath = '/mnt/lustre01/work/ch0636/u241057/INDIA'
 
@@ -39,8 +41,23 @@ def make_inames(path, wildcards):
 
     return inames
 
-def make_onames(opath, inames):
-    pass
+def make_onames(opath, inames, extraname='_cdo_processed'):
+    '''
+    create output names
+    '''
+    onames = []
+
+    for iname in inames:
+        fname = os.path.split(iname)[1]
+        fname, ext = os.path.splitext(fname)
+        if ext == '.ieg':
+            ext = '.nc'
+
+        oname = "{}/{}{}{}".format(opath, fname, extraname,ext)
+        onames.append(oname)
+
+    return onames
+
 
 
 def convert_function(custom=None, ymonmean = None, selyear=None, selmon=None):
@@ -95,13 +112,20 @@ def custom_finction(model, custom = None):
     return custom
 
 
-def cdo_command(model, custom=None, ymonmean = None, selyear = None, selmon=None):
-    custom = custom_finction(model)
+def cdo_commands(model, inames, onames, custom=None, ymonmean = None, selyear = None, selmon=None):
+    custom = custom_finction(model, custom)
     final_function = convert_function(custom, ymonmean, selyear, selmon)
-    return final_function
+    commands  = []
+    for iname, oname in zip(inames, onames):
+        command = copy.copy(final_function)
+        command.append(iname)
+        command.append(oname)
+        commands.append(command)
+    return commands
 
-def cdo_exe(final_function):
-    pass
+#def cdo_exe(inames, onames, final_function):
+#    for iname, oname zip(inames, onames):
+#        print("cdo {} {} {}".format(final_function, iname, oname))
 
 
     
